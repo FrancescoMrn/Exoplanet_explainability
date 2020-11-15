@@ -17,12 +17,12 @@ The repository contains two main notebooks:
 __data_explotation.ipynb__ This first notebook aims to explore the data and get some important insights about the dataset. Specifically a visualization of how the time-series looks like has shown how (often) stars with exoplanets and stars without exoplanets have different range of flux fluctuation over time. This propriety can be levered by a ML/DL model to distinguish the two classes.
 <p align="center">
   <img src="/images/exoplanets.png" width=100% height=100% />
-  <img src="/images/Non-exoplanets.png" width=100% height=100% />
+  <img src="/images/Non-exoplanets.PNG" width=100% height=100% />
 </p>
 
 
 __model_train.ipynb__ The second notebook contains all the code used to model the data with SVC - Support Vector Classifier used as baseline model and a CNN coded with TensorFlow. The latter are reported in the final notes (at the botton of the notebook) performs better since can better explore the features provided.
-<img src="/images/loss_function.png" width=100% height=100% />
+<img src="/images/loss_function.PNG" width=100% height=100% />
 
 ## Project Instructions
 
