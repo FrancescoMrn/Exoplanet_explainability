@@ -26,28 +26,35 @@ def _local_loader(path, label_column_index, skiprows=1, delimiter=','):
 
 def preprocess_data(bucket, local=True):
     LABEL_COLUMN_INDEX = 0
+    
+    logging.info('Exoplanets Pipeline - Preprocess: Paths creation with {0} bucket'.format(bucket))
+    # define input bucket-path of the data
+    dataset_dir = os.path.join(bucket, 'data')
+    train_import_path = os.path.join(dataset_dir, "exoTrain.csv")
+    test_import_path = os.path.join(dataset_dir, "exoTest.csv")
 
-    logging.info('Local data loader running')
-    TRAIN_SET_PATH = "data/exoTrain.csv"
-    TEST_SET_PATH = "data/exoTest.csv"
-    x_train, y_train = _local_loader(path=TRAIN_SET_PATH, label_column_index=LABEL_COLUMN_INDEX)
-    x_test, y_test = _local_loader(path=TEST_SET_PATH, label_column_index=LABEL_COLUMN_INDEX)
-
-
+    # define output bucket-path of the processed data
+    preprocess_dir = os.path.join(bucket, 'preprocess')
+    train_preprocess_path = os.path.join(preprocess_dir, "train_dmatrix.data")
+    test_preprocess_path = os.path.join(preprocess_dir, "test_dmatrix.data")
+                                    
+    logging.info('Exoplanets Pipeline - Preprocess: Data import')
+    x_train, y_train = _local_loader(path=train_import_path, label_column_index=LABEL_COLUMN_INDEX)
+    x_test, y_test = _local_loader(path=test_import_path, label_column_index=LABEL_COLUMN_INDEX)
     # save results as DMatrix for better performances on xgboost
     dtrain = xgb.DMatrix(x_train, label=y_train)
     dtest = xgb.DMatrix(x_test, label=y_test)
-
-    logging.info('Store data set as DMatrix')
-    xgb.DMatrix.save_binary(dtrain, 'train_DMatrix.data')
-    xgb.DMatrix.save_binary(dtest, 'test_DMatrix.data')
-    logging.info('DMatrices saving completed')
+    
+    logging.info('Exoplanets Pipeline - Preprocess: Store data set as DMatrix')
+    xgb.DMatrix.save_binary(dtrain, train_preprocess_path)
+    xgb.DMatrix.save_binary(dtest, test_preprocess_path)
+    logging.info('Exoplanets Pipeline - Preprocess: DMatrices saving in {0} completed'.format(preprocess_dir))
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--bucket",
+        "--input_bucket",
         help = "GCS bucket where datasets will be loaded and pushed.",
         required = True
     )
@@ -55,16 +62,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     gs = "gs://"
-    bucket = args.bucket if gs in args.bucket else os.path.join(gs, args.bucket)
-
-    # define input bucket-path of the data
-    data_dir = os.path.join(bucket, 'data')
-    train_import_path = os.path.join(data_dir, "exoTrain.csv")
-    test_import_path = os.path.join(data_dir, "exoTest.csv")
-
-    # define output bucket-path of the processed data
-    preprocess_dir = os.path.join(bucket, 'preprocess')
-    train_preprocess_path = os.path.join(preprocess_dir, "train_dmatrix.data")
-    test_preprocess_path = os.path.join(preprocess_dir, "test_dmatrix.data")
-    logging.info('Exoplanets Pipeline - Preprocess')
-    preprocess_data()
+    bucket = args.input_bucket if gs in args.input_bucket else os.path.join(gs, args.input_bucket)
+    
+    logging.info('Exoplanets Pipeline - Preprocess: Running')
+    preprocess_data(bucket)
