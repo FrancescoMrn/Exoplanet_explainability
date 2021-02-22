@@ -6,6 +6,7 @@ This code perform:
 - Run XGBoost model Training
 - Save model inside the Bucket
 '''
+import numpy as np
 import argparse
 import logging
 import joblib
