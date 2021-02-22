@@ -1,0 +1,16 @@
+name: preprocess
+description: |
+  This component creates the training and
+  validation datasets by pulling the data from GCP bucket
+  and pushing them back 
+  gs://<BUCKET>/exoplanets_kubeflow/preprocess.
+inputs:
+  - {name: Input Bucket , default: 'exoplanets_kubeflow', type: String, description: 'GCS directory path.'}
+
+implementation:
+  container:
+    image: gcr.io/ds-dev-playground/exoplanets_kubeflow-preprocess
+    command: [
+      python3, main.py,
+      --input_bucket, {inputValue: Input Bucket}
+      ]
