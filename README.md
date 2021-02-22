@@ -24,6 +24,10 @@ __data_explotation.ipynb__ This first notebook aims to explore the data and get 
 __model_train.ipynb__ The second notebook contains all the code used to model the data with SVC - Support Vector Classifier used as baseline model and a CNN coded with TensorFlow. The latter are reported in the final notes (at the botton of the notebook) performs better since can better explore the features provided.
 <img src="/images/loss_function.PNG" width=100% height=100% />
 
+#### Kubeflow Pipeline Implementation
+
+In the following [folder](/kubeflow_pipeline/README.md) an  implementation of a small pipeline with xgboost.
+
 ## Project Instructions
 
 In order to run the model some basic libraries are needed. Run the following command-lines to create a new conda environment and install the required libraries.
@@ -45,6 +49,5 @@ kaggle datasets download -d keplersmachines/kepler-labelled-time-series-data
 
 ## Possible Improvements
 
-- Evaluate XGBoost algorithm and DNN algorithm over the dataset.
-- Create model package to train TensorFlow model over GCP ML engine.
-- Perform HPO on the model
+- DNN algorithm over the dataset.
+- Run model training on GCP ML engine.
