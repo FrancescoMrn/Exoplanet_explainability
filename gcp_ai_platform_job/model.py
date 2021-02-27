@@ -102,6 +102,7 @@ def batch_generator(x_train, y_train, batch_size=32):
 
 
 def train_and_evaluate(args):
+    print(args["output_dir"])
     train_dataset_path = _get_blob_bucket(args["bucket"], "data/exoTrain.csv", "exoTrain.csv")
     test_dataset_path = _get_blob_bucket(args["bucket"], "data/exoTest.csv", "exoTest.csv")
 
@@ -118,7 +119,7 @@ def train_and_evaluate(args):
                 loss='binary_crossentropy',
                 metrics=[tf.keras.metrics.BinaryAccuracy(), tf.keras.metrics.Recall()])
 
-    logdir = os.path.join("gs://",args["bucket"], args["output-dir"], datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    logdir = os.path.join("gs://",args["bucket"], args["output_dir"], datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
     tensorboard_callback = tf.keras.callbacks.TensorBoard(logdir, histogram_freq=1)
 
     model.fit(batch_generator(x_train, y_train, args["batch_size"]), 

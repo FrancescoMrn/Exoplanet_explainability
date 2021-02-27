@@ -22,7 +22,7 @@ if __name__ == "__main__":
         required=True
     )
     parser.add_argument(
-        "--output-dir",
+        "--output_dir",
         help="Location to write checkpoints and export models",
         required=True
     )
@@ -50,6 +50,8 @@ if __name__ == "__main__":
     # Parse all arguments
     args = parser.parse_args()
     arguments = args.__dict__
+
+    print(arguments)
 
     # Run the training job
     train_and_evaluate(arguments)
