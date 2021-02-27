@@ -105,8 +105,8 @@ def train_and_evaluate(args):
     train_dataset_path = _get_blob_bucket(args["bucket"], "data/exoTrain.csv", "exoTrain.csv")
     test_dataset_path = _get_blob_bucket(args["bucket"], "data/exoTest.csv", "exoTest.csv")
 
-    x_train, y_train = data_loader_txt(path=args["train_data_path"], label_column_index=LABEL_COLUMN_INDEX) 
-    x_test, y_test = data_loader_txt(path=args["eval_data_path"], label_column_index=LABEL_COLUMN_INDEX)
+    x_train, y_train = data_loader_txt(train_dataset_path, label_column_index=LABEL_COLUMN_INDEX) 
+    x_test, y_test = data_loader_txt(test_dataset_path, label_column_index=LABEL_COLUMN_INDEX)
 
     # perform expansion of dimension
     x_train, x_test = expand_inputs(x_train, x_test)
