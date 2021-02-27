@@ -118,7 +118,7 @@ def train_and_evaluate(args):
                 loss='binary_crossentropy',
                 metrics=[tf.keras.metrics.BinaryAccuracy(), tf.keras.metrics.Recall()])
 
-    logdir = os.path.join("gs://",args["bucket"], args["output_dir"], datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    logdir = os.path.join("gs://",args["bucket"], args["output-dir"], datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
     tensorboard_callback = tf.keras.callbacks.TensorBoard(logdir, histogram_freq=1)
 
     model.fit(batch_generator(x_train, y_train, args["batch_size"]), 
