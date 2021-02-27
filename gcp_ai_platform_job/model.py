@@ -6,8 +6,30 @@ from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Conv1D, MaxPool1D, Dense, Dropout, Flatten, BatchNormalization, Input, concatenate, Activation
 from tensorflow.keras.optimizers import Adam
 
+#gcp api
+from google.cloud import storage
+
 # parameters
 LABEL_COLUMN_INDEX = 0
+
+def _get_blob_bucket(bucket_name, path, destination):
+    """Downloads a blob from the bucket."""
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+
+    blob = bucket.blob(path)
+    blob.download_to_filename(destination)
+    
+    return destination
+
+def _upload_blob_bucket(bucket_name, source_file_name, destination):
+    """Uploads a file to the bucket."""
+
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
+    
+    blob = bucket.blob(destination)
+    blob.upload_from_filename(source_file_name)
 
 
 def data_loader_txt(path, label_column_index, skiprows=1, delimiter=',', normalize=True):
@@ -20,9 +42,8 @@ def data_loader_txt(path, label_column_index, skiprows=1, delimiter=',', normali
     
     if normalize: # standard normalization
         x = ((x - np.mean(x, axis=1).reshape(-1,1)) / np.std(x, axis=1).reshape(-1,1))
+
     return x, y
-
-
 
 def expand_inputs(x_train, x_test):
     # expand one dimension to work with 1D CNN layer
@@ -81,6 +102,9 @@ def batch_generator(x_train, y_train, batch_size=32):
 
 
 def train_and_evaluate(args):
+    train_dataset_path = _get_blob_bucket(args["bucket"], "data/exoTrain.csv", "exoTrain.csv")
+    test_dataset_path = _get_blob_bucket(args["bucket"], "data/exoTest.csv", "exoTest.csv")
+
     x_train, y_train = data_loader_txt(path=args["train_data_path"], label_column_index=LABEL_COLUMN_INDEX) 
     x_test, y_test = data_loader_txt(path=args["eval_data_path"], label_column_index=LABEL_COLUMN_INDEX)
 
@@ -94,7 +118,7 @@ def train_and_evaluate(args):
                 loss='binary_crossentropy',
                 metrics=[tf.keras.metrics.BinaryAccuracy(), tf.keras.metrics.Recall()])
 
-    logdir = os.path.join(args["output_dir"], datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    logdir = os.path.join("gs://",args["bucket"], args["output_dir"], datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
     tensorboard_callback = tf.keras.callbacks.TensorBoard(logdir, histogram_freq=1)
 
     model.fit(batch_generator(x_train, y_train, args["batch_size"]), 

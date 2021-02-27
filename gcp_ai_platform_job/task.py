@@ -17,14 +17,10 @@ if __name__ == "__main__":
         default="junk"
     )
     parser.add_argument(
-        "--train_data_path",
-        help="Location of training data",
+        "--bucket",
+        help="Bucket where the data are located",
         required=True
-    )
-    parser.add_argument(
-        "--eval_data_path",
-        help="Location of evaluation data",
-        required=True
+
     )
     parser.add_argument(
         "--output_dir",
