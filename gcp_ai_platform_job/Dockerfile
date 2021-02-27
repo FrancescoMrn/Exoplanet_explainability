@@ -10,7 +10,7 @@ WORKDIR /root
 
 
 # Installs google cloud sdk, this is mostly for using gsutil to export model.
-RUN apt-get install wget && wget -nv \
+RUN wget -nv \
     https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz && \
     mkdir /root/tools && \
     tar xvzf google-cloud-sdk.tar.gz -C /root/tools && \
