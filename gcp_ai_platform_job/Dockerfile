@@ -7,7 +7,7 @@ RUN mkdir -p /root
 WORKDIR /root
 
 # Installs additional packages
-
+RUN apt-get update -y && apt-get install wget -y
 
 # Installs google cloud sdk, this is mostly for using gsutil to export model.
 RUN wget -nv \
