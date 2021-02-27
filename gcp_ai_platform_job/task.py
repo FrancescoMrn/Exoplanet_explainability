@@ -12,6 +12,11 @@ import tensorflow as tf
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
+      '--job-dir',
+      help='GCS location to write checkpoints and export models',
+      required=True
+    )
+    parser.add_argument(
         "--bucket",
         help="Bucket where the data are located",
         required=True
